@@ -73,15 +73,8 @@ def git_commit_note(note_path: str):
 
 
 def record_audio() -> str:
-    """
-    Record audio from microphone using sox.
-    Press Ctrl+C to stop recording.
-
-    Returns:
-        Path to recorded audio file
-    """
     print("\n🎙  Recording started — speak your thoughts!")
-    print("⏹  Press Ctrl+C to stop recording\n")
+    print("⏹  Press Ctrl+C to stop early OR auto-stops after 60 seconds\n")
 
     try:
         subprocess.run(
@@ -90,12 +83,14 @@ def record_audio() -> str:
                 "-r", "16000",
                 "-c", "1",
                 "-b", "16",
-                RECORDING_FILENAME
+                RECORDING_FILENAME,
+                "trim", "0", "60"
             ],
             check=True
         )
+        print("\n⏹  Auto-stopped after 60 seconds!")
     except KeyboardInterrupt:
-        print("\n⏹  Recording stopped!")
+        print("\n⏹  Recording stopped early — processing your note...")
     except FileNotFoundError:
         print("❌ sox not found. Install with: brew install sox")
         sys.exit(1)
